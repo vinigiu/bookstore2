@@ -5,14 +5,20 @@ import { Home } from "./styles";
 
 type THeader = {
     resetBooksData?: () => void;
-    resetSearchValue?: () => void;  
+    resetSearchValue?: () => void;
+    resetSearchType?: () => void;  
 }
 
-export default function Header({ resetBooksData, resetSearchValue }: THeader) {
+export default function Header({ 
+    resetBooksData, 
+    resetSearchValue, 
+    resetSearchType 
+}: THeader) {
     const handleClick = useCallback(() => {
-        if (resetBooksData && resetSearchValue) {
+        if (resetBooksData && resetSearchValue && resetSearchType) {
             resetBooksData();
             resetSearchValue();
+            resetSearchType();
         }
     },[])
     

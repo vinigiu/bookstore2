@@ -11,6 +11,7 @@ import { useState } from 'react';
 export default function Home(): JSX.Element {
   const [booksData, setBooksData] = useState<IBooksDataType[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [searchType, setSearchType] = useState<string>('both')
 
   const resetBooksData = () => {
     setBooksData([]);
@@ -20,11 +21,15 @@ export default function Home(): JSX.Element {
     setSearchValue('');
   };
 
+  const resetSearchType = () => {
+    setSearchType('both');
+  };
+
   return (
     <BooksProvider>
       <ToastContainer/>
       <div className='min-h-screen flex flex-col justify-between'>
-        <Header resetBooksData={resetBooksData} resetSearchValue={resetSearchValue}/>
+        <Header resetBooksData={resetBooksData} resetSearchValue={resetSearchValue} resetSearchType={resetSearchType}/>
         <div className='flex justify-center'>
           <main className='flex flex-col'>
             <SearchBar 
@@ -32,6 +37,8 @@ export default function Home(): JSX.Element {
               setBooksData={setBooksData} 
               searchValue={searchValue} 
               setSearchValue={setSearchValue}
+              searchType={searchType}
+              setSearchType={setSearchType}
             />
           </main>
         </div>

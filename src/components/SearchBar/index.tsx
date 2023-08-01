@@ -12,18 +12,24 @@ type TSearchBar = {
     setBooksData: any;
     searchValue: string;
     setSearchValue: any;
+    searchType: string;
+    setSearchType: any;
 }
 
 const bungee = Bungee({weight: '400', subsets: ['latin']})
 
-export default function SearchBar({ booksData, setBooksData, searchValue, setSearchValue }: TSearchBar ) {
+export default function SearchBar({ 
+    booksData, 
+    setBooksData, 
+    searchValue, 
+    setSearchValue, 
+    searchType, 
+    setSearchType 
+}: TSearchBar ) {
     const { getBooksBySearch, getBooksByTitle, getBooksByAuthor } = useContext(BooksContext);
-
-    const [searchType, setSearchType] = useState<string>('both')
 
     const handleSubmit = useCallback(async (e: any) => {
         e.preventDefault();
-        console.log(searchType);
         if(searchType === 'both') {
             const data  = await getBooksBySearch(searchValue);
             if (!(data instanceof Error) && data.length > 0) {
