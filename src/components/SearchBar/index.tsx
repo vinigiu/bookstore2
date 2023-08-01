@@ -81,7 +81,7 @@ export default function SearchBar({
                     <SearchButton className="ml-5" type="submit">Buscar</SearchButton>
                 </div>
             </form>
-            <div className="flex justify-center gap-10 mb-10">
+            <div className="flex justify-center gap-6 mb-10">
                 <SearchTypeButton 
                     selected={searchType === 'title'} 
                     onClick={handleSearchTypeTitle}
