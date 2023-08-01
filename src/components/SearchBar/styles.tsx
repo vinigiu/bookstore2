@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
+type TSearchTypeButton = {
+    selected: boolean
+}
+
 export const Title = styled.div`
-    font-size: 4rem;
     color: #594a92;
     font-weight: 500;
 `;
@@ -18,4 +21,11 @@ export const Input = styled.input`
     &:focus {
         border-color: #594a92;
     }
+`;
+
+export const SearchTypeButton = styled.button<TSearchTypeButton>`
+    padding: 7px;
+    border-radius: 5px;
+    color: ${props => props.selected ? '#d0c8f1' :'#080124'};
+    background-color: ${props => props.selected ? '#6146ce' :'#9480e7'};
 `;

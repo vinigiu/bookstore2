@@ -1,10 +1,10 @@
 'use client'
 import { BooksContext } from "@/contexts/Books";
 import BookList from "../BookList";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { IBooksDataType } from "@/interfaces/IBooksDataType";
 import { toast } from "react-toastify";
-import { Input, SearchButton, Title } from './styles';
+import { Input, SearchButton, SearchTypeButton, Title } from './styles';
 import { Bungee } from 'next/font/google'
 
 type TSearchBar = {
@@ -17,25 +17,52 @@ type TSearchBar = {
 const bungee = Bungee({weight: '400', subsets: ['latin']})
 
 export default function SearchBar({ booksData, setBooksData, searchValue, setSearchValue }: TSearchBar ) {
-    const { getBooksBySearch } = useContext(BooksContext);
+    const { getBooksBySearch, getBooksByTitle, getBooksByAuthor } = useContext(BooksContext);
+
+    const [searchType, setSearchType] = useState<string>('both')
 
     const handleSubmit = useCallback(async (e: any) => {
         e.preventDefault();
-        const data  = await getBooksBySearch(searchValue);
-        if (!(data instanceof Error) && data.length > 0) {
-            setBooksData(data);
-        } else if (data instanceof Error) {
-            toast.error(data.message, {autoClose: 7000})
+        console.log(searchType);
+        if(searchType === 'both') {
+            const data  = await getBooksBySearch(searchValue);
+            if (!(data instanceof Error) && data.length > 0) {
+                setBooksData(data);
+            } else if (data instanceof Error) {
+                toast.error(data.message, {autoClose: 7000})
+            }
+        } else if(searchType === 'title') {
+            const data  = await getBooksByTitle(searchValue);
+            if (!(data instanceof Error) && data.length > 0) {
+                setBooksData(data);
+            } else if (data instanceof Error) {
+                toast.error(data.message, {autoClose: 7000})
+            }
+        } else {
+            const data  = await getBooksByAuthor(searchValue);
+            if (!(data instanceof Error) && data.length > 0) {
+                setBooksData(data);
+            } else if (data instanceof Error) {
+                toast.error(data.message, {autoClose: 7000})
+            }
         }
-    }, [searchValue]);
+    }, [searchValue, searchType]);
 
     const handleInputChange = useCallback((e: any) => {
         setSearchValue(e.target.value);
     }, [setSearchValue])
 
+    const handleSearchTypeTitle = useCallback(() => {
+        searchType === 'title' ? setSearchType('both') : setSearchType('title');
+    }, [searchType])
+
+    const handleSearchTypeAuthor = useCallback(() => {
+        searchType === 'author' ? setSearchType('both') : setSearchType('author');
+    }, [searchType])
+
     return (
         <>
-            <Title className={`self-center mb-5 ${bungee.className}`}>Book Finder</Title>
+            <Title className={`lg:text-7xl self-center mb-5 ${bungee.className} md:text-6xl sm:text-5xl min-[250px]:text-3xl`}>Book Finder</Title>
             <form onSubmit={e => handleSubmit(e)}>
                 <div className='flex justify-center pb-10'>
                     <Input
@@ -48,6 +75,20 @@ export default function SearchBar({ booksData, setBooksData, searchValue, setSea
                     <SearchButton className="ml-5" type="submit">Buscar</SearchButton>
                 </div>
             </form>
+            <div className="flex justify-center gap-10 mb-10">
+                <SearchTypeButton 
+                    selected={searchType === 'title'} 
+                    onClick={handleSearchTypeTitle}
+                >
+                    Buscar Título
+                </SearchTypeButton>
+                <SearchTypeButton
+                    selected={searchType === 'author'} 
+                    onClick={handleSearchTypeAuthor}
+                >
+                    Buscar Autor
+                </SearchTypeButton>
+            </div>
             <BookList booksData={booksData}/>
         </>
     );
